@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder, Validators, } from '@angular/forms';
 
 @Component({
   selector: 'app-create-employee',
@@ -20,7 +20,10 @@ export class CreateEmployeeComponent implements OnInit {
         proficiency: ['beginner']
       })
     });
-
+    // Subscribe to valueChanges observable for one controle.
+    this.employeeForm.get('fullName').valueChanges.subscribe(v => { console.log(v); })
+    // Subscribe to valueChange observable for Form
+    this.employeeForm.valueChanges.subscribe(f => { console.log(JSON.stringify(f)); });
     // Using Forma Group/Control using new key work.
     // this.employeeForm = new FormGroup({
     //   fullName: new FormControl(),
