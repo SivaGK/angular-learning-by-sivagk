@@ -25,3 +25,6 @@ const appRoutes: Routes = [
   exports: [ RouterModule ]
 })
 export class AppRoutingModule { }
+
+
+//https://stackblitz.com/github/gothinkster/angular-realworld-example-app?file=src%2Fapp%2Fapp.module.ts
