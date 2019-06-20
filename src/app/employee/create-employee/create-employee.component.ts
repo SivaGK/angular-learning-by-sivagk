@@ -24,4 +24,17 @@ export class CreateEmployeeComponent implements OnInit {
   onSubmit(): void {
     console.log(this.employeeForm.value);
   }
+  onLoadDataClick(): void {
+    //use setValue() to update all form controls and patchValue() to update a sub-set of form controls 
+    //this.employeeForm.setValue({
+    this.employeeForm.patchValue({
+      fullName: 'Pragim Technologies',
+      email: 'pragim@pragimtech.com',
+      // skills: {
+      //   skillName: 'C#',
+      //   experienceInYears: 5,
+      //   proficiency: 'beginner'
+      // }
+    });
+  }
 }
