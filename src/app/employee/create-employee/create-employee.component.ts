@@ -20,10 +20,13 @@ export class CreateEmployeeComponent implements OnInit {
         proficiency: ['beginner']
       })
     });
+    
     // Subscribe to valueChanges observable for one controle.
-    this.employeeForm.get('fullName').valueChanges.subscribe(v => { console.log(v); })
+    //this.employeeForm.get('fullName').valueChanges.subscribe(v => { console.log(v); })
+
     // Subscribe to valueChange observable for Form
-    this.employeeForm.valueChanges.subscribe(f => { console.log(JSON.stringify(f)); });
+    //this.employeeForm.valueChanges.subscribe(f => { console.log(JSON.stringify(f)); });
+
     // Using Forma Group/Control using new key work.
     // this.employeeForm = new FormGroup({
     //   fullName: new FormControl(),
@@ -37,6 +40,7 @@ export class CreateEmployeeComponent implements OnInit {
   }
   onSubmit(): void {
     console.log(this.employeeForm.value);
+    this.logKeyValuePairs(this.employeeForm);
   }
   onLoadDataClick(): void {
     //use setValue() to update all form controls and patchValue() to update a sub-set of form controls 
@@ -51,4 +55,20 @@ export class CreateEmployeeComponent implements OnInit {
       // }
     });
   }
+  logKeyValuePairs(group: FormGroup): void {
+  // loop through each key in the FormGroup
+  Object.keys(group.controls).forEach((key: string) => {
+    // Get a reference to the control using the FormGroup.get() method
+    const abstractControl = group.get(key);
+    // If the control is an instance of FormGroup i.e a nested FormGroup
+    // then recursively call this same method (logKeyValuePairs) passing it
+    // the FormGroup so we can get to the form controls in it
+    if (abstractControl instanceof FormGroup) {
+      this.logKeyValuePairs(abstractControl);
+      // If the control is not a FormGroup then we know it's a FormControl
+    } else {
+      console.log('Key = ' + key + ' && Value = ' + abstractControl.value);
+    }
+  });
+}
 }
