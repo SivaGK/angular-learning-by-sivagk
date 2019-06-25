@@ -58,7 +58,7 @@ export class CreateEmployeeComponent implements OnInit {
     this.logValidationErrors(this.employeeForm);
     console.log(this.formErrors);
   }
-  logValidationErrors(group: FormGroup): void {
+  logValidationErrors(group: FormGroup = this.employeeForm): void {
     // loop through each key in the FormGroup
     Object.keys(group.controls).forEach((key: string) => {
       // Get a reference to the control using the FormGroup.get() method
