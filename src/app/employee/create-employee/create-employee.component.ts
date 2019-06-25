@@ -13,11 +13,13 @@ export class CreateEmployeeComponent implements OnInit {
   ngOnInit() {
     this.employeeForm = this.fb.group({
       fullName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(10)]],
-      email: ['', [Validators.required]],
+      contactPreference: ['email'],
+      email: ['', Validators.required],
+      phone: [''],
       skills: this.fb.group({
         skillName: ['', [Validators.required]],
         experienceInYears: ['', [Validators.required]],
-        proficiency: ['beginner', [Validators.required]]
+        proficiency: ['', Validators.required]
       })
     });
 
@@ -25,7 +27,7 @@ export class CreateEmployeeComponent implements OnInit {
     //this.employeeForm.get('fullName').valueChanges.subscribe(v => { console.log(v); })
 
     // Subscribe to valueChange observable for Form
-    //this.employeeForm.valueChanges.subscribe(f => { console.log(JSON.stringify(f)); });
+    this.employeeForm.valueChanges.subscribe(f => { this.logValidationErrors(this.employeeForm) });
 
     // Using Forma Group/Control using new key work.
     // this.employeeForm = new FormGroup({
@@ -55,7 +57,7 @@ export class CreateEmployeeComponent implements OnInit {
       //   proficiency: 'beginner'
       // }
     });
-    this.logValidationErrors(this.employeeForm);
+    //this.logValidationErrors(this.employeeForm);
     console.log(this.formErrors);
   }
   logValidationErrors(group: FormGroup = this.employeeForm): void {
@@ -72,7 +74,7 @@ export class CreateEmployeeComponent implements OnInit {
       } else {
         // Clear the existing validation errors
         this.formErrors[key] = '';
-        if (abstractControl && !abstractControl.valid) {
+        if (abstractControl && !abstractControl.valid && (abstractControl.touched || abstractControl.dirty)) {
           // Get all the validation messages of the form control
           // that has failed the validation
           const messages = this.validationMessages[key];
@@ -81,6 +83,7 @@ export class CreateEmployeeComponent implements OnInit {
           // formErrors object. The UI will bind to this object to
           // display the validation errors
           for (const errorKey in abstractControl.errors) {
+            debugger;
             if (errorKey) {
               this.formErrors[key] += messages[errorKey] + ' ';
             }
@@ -96,6 +99,7 @@ export class CreateEmployeeComponent implements OnInit {
   formErrors = {
     'fullName': '',
     'email': '',
+    'phone': '',
     'skillName': '',
     'experienceInYears': '',
     'proficiency': ''
@@ -110,6 +114,9 @@ export class CreateEmployeeComponent implements OnInit {
     'email': {
       'required': 'Email is required.'
     },
+    'phone': {
+      'required': 'Phone is required.'
+    },
     'skillName': {
       'required': 'Skill Name is required.',
     },
@@ -117,7 +124,17 @@ export class CreateEmployeeComponent implements OnInit {
       'required': 'Experience is required.',
     },
     'proficiency': {
-      'required': 'Proficiency is required.',
+      'required': 'proficiency is required.',
     },
   };
+
+  onContactPrefernceChange(selectedValue: string) {
+  const phoneFormControl = this.employeeForm.get('phone');
+  if (selectedValue === 'phone') {
+    phoneFormControl.setValidators(Validators.required);
+  } else {
+    phoneFormControl.clearValidators();
+  }
+  phoneFormControl.updateValueAndValidity();
+}
 }
