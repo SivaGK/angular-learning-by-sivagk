@@ -14,7 +14,7 @@ export class CreateEmployeeComponent implements OnInit {
     this.employeeForm = this.fb.group({
       fullName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(10)]],
       contactPreference: ['email'],
-      email: ['', [Validators.required,emailDomain]],
+      email: ['', [Validators.required, emailDomain('xtglobal.com')]],
       phone: [''],
       skills: this.fb.group({
         skillName: ['', [Validators.required]],
@@ -83,7 +83,6 @@ export class CreateEmployeeComponent implements OnInit {
           // formErrors object. The UI will bind to this object to
           // display the validation errors
           for (const errorKey in abstractControl.errors) {
-            debugger;
             if (errorKey) {
               this.formErrors[key] += messages[errorKey] + ' ';
             }
@@ -130,21 +129,29 @@ export class CreateEmployeeComponent implements OnInit {
   };
 
   onContactPrefernceChange(selectedValue: string) {
-  const phoneFormControl = this.employeeForm.get('phone');
-  if (selectedValue === 'phone') {
-    phoneFormControl.setValidators(Validators.required);
-  } else {
-    phoneFormControl.clearValidators();
+    const phoneFormControl = this.employeeForm.get('phone');
+    const emailFormControl = this.employeeForm.get('email');
+    if (selectedValue === 'phone') {
+      phoneFormControl.setValidators(Validators.required);
+      emailFormControl.clearValidators();
+    } else {
+      phoneFormControl.clearValidators();
+      emailFormControl.setValidators([Validators.required, emailDomain('xtglobal.com')]);
+    }
+    emailFormControl.updateValueAndValidity();
+    phoneFormControl.updateValueAndValidity();
   }
-  phoneFormControl.updateValueAndValidity();
 }
-}
-function emailDomain(control: AbstractControl): { [key: string]: any } | null {
-  const email: string = control.value;
-  const domain = email.substring(email.lastIndexOf('@') + 1);
-  if (email === '' || domain.toLowerCase() === 'xtglobal.com') {
-    return null;
-  } else {
-    return { 'emailDomain': true };
-  }
+//Java Script closures 
+//In simple terms, you can thinks of a closure as, a function inside another function i.e an inner function and an outer function. //The inner function has access to the outer function’s variables and parameters in addition to it's own variables and parameters.
+function emailDomain(domianName: string) {
+  return (control: AbstractControl): { [key: string]: any } | null => {
+    const email: string = control.value;
+    const domain = email.substring(email.lastIndexOf('@') + 1);
+    if (email === '' || domain.toLowerCase() === domianName.toLowerCase()) {
+      return null;
+    } else {
+      return { 'emailDomain': true };
+    }
+  };
 }
